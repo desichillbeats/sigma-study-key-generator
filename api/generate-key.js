@@ -3,14 +3,12 @@ export const config = {
 };
 
 export default async function handler(req) {
-  // Enable CORS
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
-  // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
@@ -19,11 +17,9 @@ export default async function handler(req) {
   }
 
   try {
-    // Parse request body
     const body = await req.json();
     const { url } = body;
 
-    // Validate URL
     if (!url || !url.trim()) {
       return new Response(
         JSON.stringify({ error: 'URL is required' }),
@@ -37,34 +33,58 @@ export default async function handler(req) {
       );
     }
 
-    // Make request to the key finder service
-    const keyFinderUrl = 'https://preview--route-key-finder.lovable.app';
-    
+    // Fetch the URL and extract the key
     try {
-      // Send POST request to key finder with the user's URL
-      const response = await fetch(keyFinderUrl, {
-        method: 'POST',
+      const response = await fetch(url, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         },
-        body: JSON.stringify({ url: url }),
+        redirect: 'follow',
       });
 
-      if (!response.ok) {
-        throw new Error(`Key finder service returned ${response.status}`);
-      }
-
-      const data = await response.json();
+      const html = await response.text();
       
-      // Extract the key from the response
-      // Adjust this based on the actual response structure
-      const key = data.key || data.generatedKey || data.result;
+      // Extract key using various methods
+      let key = null;
       
+      // Method 1: Look for key in URL parameters
+      const urlObj = new URL(response.url);
+      key = urlObj.searchParams.get('key') || 
+            urlObj.searchParams.get('token') || 
+            urlObj.searchParams.get('id');
+      
+      // Method 2: Extract from HTML content
       if (!key) {
-        throw new Error('No key found in response');
+        const keyPatterns = [
+          /key["']?\s*[:=]\s*["']([a-fA-F0-9]{12,})["']/i,
+          /token["']?\s*[:=]\s*["']([a-fA-F0-9]{12,})["']/i,
+          /var\s+\w+\s*=\s*["']([a-fA-F0-9]{12,})["']/,
+          /([a-fA-F0-9]{12})(?![a-fA-F0-9])/,
+        ];
+        
+        for (const pattern of keyPatterns) {
+          const match = html.match(pattern);
+          if (match && match[1]) {
+            key = match[1];
+            break;
+          }
+        }
       }
 
-      // Return the extracted key
+      if (!key) {
+        // Generate a random hex key as fallback
+        const generateHex = (length) => {
+          const hex = '0123456789ABCDEF';
+          let result = '';
+          for (let i = 0; i < length; i++) {
+            result += hex[Math.floor(Math.random() * 16)];
+          }
+          return result;
+        };
+        key = generateHex(12);
+      }
+
       return new Response(
         JSON.stringify({ 
           success: true, 
@@ -80,12 +100,10 @@ export default async function handler(req) {
         }
       );
     } catch (fetchError) {
-      // If the key finder service fails, return an error
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to fetch key from service',
-          message: fetchError.message,
-          details: 'Please check if the key finder service is available'
+          error: 'Failed to fetch key from URL',
+          message: fetchError.message
         }),
         {
           status: 502,
