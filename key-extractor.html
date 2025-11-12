@@ -653,16 +653,17 @@
   const url = urlInput.value.trim();
   
   // Call the API to generate the key
-  fetch('/api/extract-key', {
+  fetch(''https://pkgvmgckkrybpvnccbiy.supabase.co/functions/v1/extract-key'key', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrZ3ZtZ2Nra3J5YnB2bmNjYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NTcwODUsImV4cCI6MjA3ODUzMzA4NX0.f0RoMlf6GWRcvFNctbFiV8VpOZ9mZlBtShCC1YYI18U',
     },
     body: JSON.stringify({ url: url }),
   })
   .then(response => response.json())
   .then(data => {
-    if (data.success && data.key) {
+    if (data.key) {
       // Set the generated key
       const newKey = data.key;
       keyOutput.value = newKey; // Set key on Page 3
