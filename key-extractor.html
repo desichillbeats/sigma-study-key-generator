@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GENESYS KEY GENERATOR V6</title>
+    <title>GENESYS KEY GENERATOR V9</title> <!--- Version Update --->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> <!-- Added Tone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         /* Custom Cyberpunk Aesthetics */
@@ -289,107 +289,60 @@
     <div id="page1" class="cyber-border-container w-full max-w-md z-10">
         <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
             
-            <!-- Info Button (REMOVED) -->
-
             <!-- Header -->
             <div class="text-center mb-6 mt-2">
                 <div class="flex items-center justify-center gap-3 mb-1">
                     <div class="relative">
-                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50"></div>
+                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50 rounded-full"></div>
                         <svg class="w-8 h-8 text-[var(--neon-yellow)] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </div>
                     <h1 class="font-tech text-3xl font-bold tracking-wider text-[var(--neon-yellow)] glitch" data-text="GENESYS">GENESYS</h1>
                 </div>
-                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">Key Generator v6.0</p>
+                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">Key Generator v9.0</p> <!--- Version Update --->
             </div>
 
-            <!-- Input Section -->
-            <div class="w-full relative mb-6 group">
-                <label class="text-[10px] text-[var(--neon-cyan)] mb-1 block font-tech tracking-widest ml-2">TARGET URL</label>
-                <input type="text" id="urlInput" placeholder="https://..." class="input-cyber w-full bg-transparent p-3 pr-10 text-sm placeholder-gray-500 tracking-wide font-mono transition-all">
-                <div class="absolute right-3 top-8 pointer-events-none">
-                     <div class="w-2 h-2 bg-[var(--neon-yellow)] rounded-full animate-pulse shadow-[0_0_5px_var(--neon-yellow)]"></div>
-                </div>
+            <!-- Input Section (RE-ADDED) -->
+            <div class="w-full relative mb-4">
+                <label class="text-[10px] text-gray-400 ml-2 mb-1 block font-tech tracking-widest uppercase" for="urlInput">Input URL</label>
+                <input type="text" id="urlInput" class="input-cyber w-full bg-black/60 p-3 text-center text-sm text-[var(--neon-cyan)] tracking-wider" placeholder="Paste your URL here...">
+                <!-- Input Error Message -->
+                <span id="inputErrorText" class="text-xs text-[var(--neon-pink)] font-tech tracking-wider absolute -bottom-5 left-2 hidden">URL cannot be empty!</span>
             </div>
 
-            <!-- Instructions List (Replaces Spacer) -->
-            <div class="w-full relative mb-6 group text-left p-4 bg-black/30 border border-dashed border-[var(--neon-cyan)]/20" style="clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+            <!-- Instructions List (UPDATED) -->
+            <div class="w-full relative my-6 group text-left p-4 bg-black/30 border border-dashed border-[var(--neon-cyan)]/20" style="clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
                 <h3 class="font-tech text-lg text-[var(--neon-yellow)] tracking-wider mb-2">HOW TO USE:</h3>
                 <ul class="modal-list text-gray-300 w-full list-none pl-0">
-                    <li>Paste your Target URL into the input field.</li>
-                    <li>Click 'Generate Key' to go to the wait page.</li>
-                    <li>Click 'Subscribe' on the wait page to start the timer.</li>
-                    <li>Wait 2.3 minutes for the process to complete.</li>
+                    <li>Click "Get Your URL" to go to the bot.</li> <!--- Updated --->
+                    <li>Paste the URL into the input box above.</li> <!--- Updated --->
+                    <li>Click 'Generate Key' to get your key instantly.</li>
+                    <li>A 3.3 minute cooldown will start.</li>
                     <li class="text-[var(--neon-pink)]">**KEY LIMIT:** You can generate **2 keys** per session. Click the **top-right corner** to reset this limit.</li>
                 </ul>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="w-full flex flex-col gap-3 mt-6">
-                <!-- NEW 'Get URL' BUTTON -->
+            <!-- Action Buttons (UPDATED) -->
+            <div class="w-full flex flex-col gap-3 mt-4">
+                <!-- 'Get URL' BUTTON (RE-ADDED) -->
                 <a href="https://t.me/sigma_keygen_bot?start=direct" target="_blank" class="btn-secondary w-full py-2 text-center text-sm uppercase tracking-widest font-bold relative overflow-hidden font-tech flex items-center justify-center gap-2">
                     <span>1. Get Your URL</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </a>
                 
                 <button onclick="startGeneration()" id="genBtn" class="btn-cyber w-full py-3 text-lg uppercase tracking-widest relative overflow-hidden font-tech">
-                    <!-- Updated text to reflect the new first step -->
-                    <span class="relative z-10">2. Generate Key</span>
+                    <span class="relative z-10">2. Generate Key</span> <!--- Updated Text --->
                 </button>
             </div>
             
-            <!-- Status Text for Page 1 -->
-            <div class="absolute bottom-10">
-                <span class="text-[9px] text-[var(--neon-yellow)] tracking-[0.2em] opacity-100 transition-opacity duration-300" id="page1StatusText">INITIALIZED</span>
-            </div>
+            <!-- Status Text for Page 1 (REMOVED) -->
 
         </div>
     </div>
 
-    <!-- PAGE 2: WAIT/SUPPORT (Initially Hidden) -->
-    <div id="page2" class="cyber-border-container w-full max-w-md z-10 hidden">
-        <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
-            <!-- Header -->
-            <div class="flex items-center justify-center gap-3 mb-4">
-                <svg class="w-6 h-6 text-[var(--neon-pink)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                <!-- ADDED glitch class and data-text attribute -->
-                <h1 class="font-tech text-2xl font-bold tracking-wider text-[var(--neon-pink)] glitch" data-text="SUPPORT THE CREATOR">SUPPORT THE CREATOR</h1>
-            </div>
-            <!-- Content -->
-            <p class="text-gray-300 text-center mb-4">Please support the creator to start the timer.</p>
-            <p class="text-gray-300 text-center mb-6">Your key will be generated after the countdown.</p>
-
-            <!-- MOVED TIMER VISUAL HERE (Initially Hidden) -->
-            <div id="timerVisual" class="relative w-48 h-48 mb-6 flex items-center justify-center hidden">
-                <!-- Ticks Ring -->
-                <div class="tick-ring" id="tickRing"></div>
-                <!-- Progress Circle SVG -->
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none" stroke-dasharray="4 4"></circle>
-                    <circle id="progressCircle" class="timer-circle-progress" cx="50" cy="50" r="40" stroke-width="4" fill="none" stroke-linecap="round"></circle>
-                </svg>
-                <!-- Digital Timer Text -->
-                <div class="absolute font-tech flex flex-col items-center justify-center">
-                     <span class="text-4xl font-bold text-[var(--neon-cyan)] drop-shadow-[0_0_5px_var(--neon-cyan)] tracking-widest" id="timerText">02:18</span>
-                     <span class="text-[9px] text-[var(--neon-yellow)] tracking-[0.2em] opacity-100 transition-opacity duration-300" id="page2StatusText">AWAITING ACTION</span>
-                </div>
-            </div>
-            <!-- END MOVED TIMER -->
-
-            <!-- Subscribe Button (acts as timer start) -->
-            <a id="subscribeBtn" href="https://youtube.com/@desichill_beats?si=gWWPeqAfmzRpzGum" target="_blank" onclick="startTimerAnimation()" class="btn-subscribe w-full py-3 text-center text-sm uppercase tracking-widest font-bold relative overflow-hidden font-tech flex items-center justify-center gap-2 mb-3">
-                <span>SUBSCRIBE TO START TIMER</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </a>
-            
-            <!-- Message shown after clicking subscribe -->
-            <p id="timerStartedMessage" class="text-gray-400 text-center text-sm font-tech hidden">Timer started. You can close the new tab.</p>
-
-        </div>
-    </div>
+    <!-- PAGE 2: WAIT/SUPPORT (REMOVED) -->
 
 
-    <!-- PAGE 3: RESULTS (Initially Hidden) -->
+    <!-- PAGE 3: RESULTS / COOLDOWN (UPDATED) -->
     <div id="page3" class="cyber-border-container w-full max-w-md z-10 hidden">
         <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
             
@@ -397,12 +350,12 @@
             <div class="text-center mb-6 mt-2">
                 <div class="flex items-center justify-center gap-3 mb-1">
                     <div class="relative">
-                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50"></div>
+                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50 rounded-full"></div>
                         <svg class="w-8 h-8 text-[var(--neon-yellow)] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </div>
                     <h1 class="font-tech text-3xl font-bold tracking-wider text-[var(--neon-yellow)] glitch" data-text="GENESYS">GENESYS</h1>
                 </div>
-                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">GENERATION COMPLETE</p>
+                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">YOUR KEY</p> <!--- Text Update --->
             </div>
 
             <!-- Output Section -->
@@ -414,16 +367,50 @@
                     <!-- Copy Button inline -->
                     <button onclick="copyToClipboard(this)" class="w-12 bg-black/40 border border-[var(--neon-yellow)] text-[var(--neon-yellow)] hover:bg-[var(--neon-yellow)] hover:text-black transition-all clip-path-polygon flex items-center justify-center group relative" style="clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <!-- Tooltip -->
                         <div id="copyTooltip" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-[var(--neon-yellow)] text-black text-[10px] font-bold px-2 py-1 opacity-0 transition-opacity pointer-events-none">COPIED</div>
                     </button>
                 </div>
             </div>
+            
+            <!-- DIVIDER -->
+            <hr class="w-full border-t-2 border-dashed border-[var(--neon-cyan)]/20 my-6">
+
+            <!-- SUPPORT & COOLDOWN SECTION (MERGED) -->
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <svg class="w-6 h-6 text-[var(--neon-pink)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <h1 class="font-tech text-2xl font-bold tracking-wider text-[var(--neon-pink)] glitch" data-text="SUPPORT THE CREATOR">SUPPORT THE CREATOR</h1>
+            </div>
+            <p class="text-gray-300 text-center mb-6">Please wait for the cooldown to finish before generating a new key.</p>
+
+            <!-- COOLDOWN TIMER VISUAL -->
+            <div id="timerVisual" class="relative w-48 h-48 mb-6 flex items-center justify-center">
+                <!-- Ticks Ring -->
+                <div class="tick-ring" id="tickRing"></div>
+                <!-- Progress Circle SVG -->
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none" stroke-dasharray="4 4"></circle>
+                    <circle id="progressCircle" class="timer-circle-progress" cx="50" cy="50" r="40" stroke-width="4" fill="none" stroke-linecap="round"></circle>
+                </svg>
+                <!-- Digital Timer Text (NOW SHOWS PERCENT) -->
+                <div class="absolute font-tech flex flex-col items-center justify-center">
+                     <span class="text-4xl font-bold text-[var(--neon-cyan)] drop-shadow-[0_0_5px_var(--neon-cyan)] tracking-widest" id="timerText">0%</span>
+                     <span class="text-[9px] text-[var(--neon-yellow)] tracking-[0.2em] opacity-100 transition-opacity duration-300" id="cooldownStatusText">COOLDOWN IN PROGRESS...</span>
+                </div>
+            </div>
+            <!-- END TIMER -->
+
+            <!-- Subscribe Button (No longer starts timer) -->
+            <a id="subscribeBtn" href="https://youtube.com/@desichill_beats?si=gWWPeqAfmzRpzGum" target="_blank" class="btn-subscribe w-full py-3 text-center text-sm uppercase tracking-widest font-bold relative overflow-hidden font-tech flex items-center justify-center gap-2 mb-3">
+                <span>SUPPORT WHILE YOU WAIT</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </a>
+            <!-- END SUPPORT & COOLDOWN -->
+
 
             <!-- Action Buttons -->
             <div class="w-full flex flex-col gap-3 mt-8">
-                <!-- Go Back Button -->
-                <button onclick="showPage('page1')" class="btn-cyber w-full py-3 text-lg uppercase tracking-widest relative overflow-hidden font-tech">
+                <!-- Go Back Button (Now Disabled by default) -->
+                <button id="genNewBtn" onclick="showPage('page1')" class="btn-cyber w-full py-3 text-lg uppercase tracking-widest relative overflow-hidden font-tech" disabled>
                     <span class="relative z-10">Generate New</span>
                 </button>
                 
@@ -439,26 +426,7 @@
     </div>
 
     <!-- INSTRUCTIONS MODAL (Hidden) -->
-    <div id="instructionsModal" class="modal-backdrop hidden fixed inset-0 flex items-center justify-center p-4" onclick="hideModal('instructionsModal')">
-        <div class="modal-content cyber-border-container w-full max-w-md z-10" onclick="event.stopPropagation()">
-            <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
-                <!-- Header -->
-                <div class="flex items-center justify-center gap-3 mb-4">
-                    <svg class="w-6 h-6 text-[var(--neon-yellow)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <h1 class="font-tech text-2xl font-bold tracking-wider text-[var(--neon-yellow)]">HOW TO USE</h1>
-                </div>
-                <!-- Content -->
-                <ul class="modal-list text-gray-300 w-full mb-6">
-                    <li>Paste your Target URL into the input field.</li>
-                    <li>Click 'Generate Key' to go to the wait page.</li>
-                    <li>Click 'Subscribe' on the wait page to start the timer.</li>
-                    <li>Wait 2.3 minutes for the process to complete.</li>
-                    <li>**KEY LIMIT:** You can generate **2 keys** per session. Click the **top-right corner** to reset this limit for testing.</li>
-                </ul>
-                <button onclick="hideModal('instructionsModal')" class="btn-secondary w-full py-2 text-sm uppercase tracking-widest font-bold">CLOSE</button>
-            </div>
-        </div>
-    <!-- INSTRUCTIONS MODAL (REMOVED) -->
+    <!-- (This modal is no longer used as instructions are on Page 1) -->
     
     <!-- SUPPORT MODAL (REMOVED) -->
 
@@ -514,7 +482,7 @@
         // --- KEY GEN LOGIC ---
 
         // --- Sound Setup ---
-        let processingSynth, successSynth, bypassSynth; // Renamed tickSynth
+        let processingSynth, successSynth, bypassSynth, errorSynth; // Added errorSynth
         let tickLoop = null; // Tone.Loop for persistent ticking
         const KEY_LIMIT = 2;
 
@@ -543,20 +511,26 @@
                     envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
                 }).toDestination();
             }
+            // --- NEW ---
+            if (!errorSynth) {
+                errorSynth = new Tone.NoiseSynth({
+                    noise: { type: 'pink' },
+                    envelope: { attack: 0.01, decay: 0.15, sustain: 0, release: 0.1 }
+                }).toDestination();
+            }
         }
 
         // --- Page/State Management ---
-        let isTimerRunning = false; // Is the whole *process* running
-        let isTimerAnimationRunning = false; // Is the *animation* (countdown) running
+        let isCooldownRunning = false; // NEW state
         let animationFrameId = null;
 
         const page1 = document.getElementById('page1');
-        const page2 = document.getElementById('page2');
+        // page2 is removed
         const page3 = document.getElementById('page3');
 
         function showPage(pageId) {
             page1.classList.add('hidden');
-            page2.classList.add('hidden');
+            // page2.classList.add('hidden'); // Removed
             page3.classList.add('hidden');
             
             const pageToShow = document.getElementById(pageId);
@@ -569,6 +543,7 @@
             }
         }
 
+        // Modal functions (no longer used, but harmless to keep)
         function showModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
         }
@@ -586,24 +561,23 @@
             tickRing.appendChild(tick);
         }
 
-        const DURATION = 138000; // 138 seconds = 2.3 minutes
+        const DURATION = 198000; // 198 seconds = 3.3 minutes
         
         // Page 1 UI
         const genBtn = document.getElementById('genBtn');
-        const urlInput = document.getElementById('urlInput');
-        const page1StatusText = document.getElementById('page1StatusText');
+        const urlInput = document.getElementById('urlInput'); // RE-ADDED
+        const inputErrorText = document.getElementById('inputErrorText'); // NEW
+        // page1StatusText is removed
 
-        // Page 2 UI
+        // Page 3 (Results/Cooldown) UI
         const timerVisual = document.getElementById('timerVisual');
-        const subscribeBtn = document.getElementById('subscribeBtn');
-        const timerStartedMessage = document.getElementById('timerStartedMessage');
+        // subscribeBtn is no longer functional for timer
         const timerText = document.getElementById('timerText');
-        const page2StatusText = document.getElementById('page2StatusText');
+        const cooldownStatusText = document.getElementById('cooldownStatusText'); // Renamed from page2StatusText
         const progressCircle = document.getElementById('progressCircle');
-
-        // Page 3 UI
         const keyOutput = document.getElementById('keyOutput');
         const copyTooltip = document.getElementById('copyTooltip');
+        const genNewBtn = document.getElementById('genNewBtn');
 
 
         // Circumference = 2 * PI * 40 = 251.2
@@ -627,21 +601,27 @@
         // MADE ASYNC
         async function startGeneration() {
             await initAudio(); // Ensure audio is ready
-            const val = urlInput.value.trim();
             
             // Check key generation limit
             let keyCount = parseInt(localStorage.getItem('genesysKeyCount') || '0');
             if (keyCount >= KEY_LIMIT) {
-                page1StatusText.innerText = "KEY LIMIT REACHED";
-                page1StatusText.style.color = "var(--neon-pink)";
-                genBtn.disabled = true;
+                // We don't have page1StatusText anymore, but the button is disabled
+                // which is handled in resetGeneratorUI()
                 return;
             }
 
-            // Simple validation
-            if (!val) {
+            // URL Validation (RE-ADDED)
+            const url = urlInput.value.trim();
+            if (!url) {
                 urlInput.classList.add('input-error');
-                setTimeout(() => urlInput.classList.remove('input-error'), 500);
+                inputErrorText.classList.remove('hidden');
+                if (Tone.context.state === 'running') {
+                    errorSynth.triggerAttackRelease("0.1s");
+                }
+                setTimeout(() => {
+                    urlInput.classList.remove('input-error');
+                    inputErrorText.classList.add('hidden');
+                }, 2000);
                 return;
             }
 
@@ -649,30 +629,49 @@
             keyCount++;
             localStorage.setItem('genesysKeyCount', keyCount);
 
-            // Set global running state
-            isTimerRunning = true;
+            // Set global running state (REMOVED)
 
-            // Go to Page 2
-            showPage('page2');
+            // Go to Page 2 (REMOVED)
             
-            // Set initial state for Page 2
-            page2StatusText.innerText = "AWAITING ACTION";
-            page2StatusText.style.color = "var(--neon-yellow)";
-            timerText.innerText = formatTime(DURATION / 1000);
+            // --- NEW FLOW: Generate key and start cooldown immediately ---
+            generateKeyAndStartCooldown();
         }
 
-        function startTimerAnimation(skippedByAdmin = false) {
-            if (isTimerAnimationRunning) return; // Don't start twice
-            
-            isTimerAnimationRunning = true;
+        // --- NEW FUNCTION ---
+        function generateKeyAndStartCooldown() {
+            if (isCooldownRunning) return; // Prevent multiple clicks
 
-            // Show timer, hide subscribe button
-            timerVisual.classList.remove('hidden');
-            subscribeBtn.classList.add('hidden');
-            timerStartedMessage.classList.remove('hidden');
+            // --- UPDATED Key Format (Prefix Removed) ---
+            const newKey = generateRandomHex(12); // Removed "GNSYS-" prefix
+            keyOutput.value = newKey; // Set key on Page 3
+            
+            // Show Page 3
+            showPage('page3');
+
+            // Disable "Generate New" button
+            genNewBtn.disabled = true;
+            
+            // Start the cooldown timer
+            startCooldownTimer(false);
+        }
+
+
+        // --- RENAMED from startTimerAnimation ---
+        function startCooldownTimer(skippedByAdmin = false) {
+            if (isCooldownRunning && !skippedByAdmin) return; // Don't start twice
+            
+            isCooldownRunning = true;
+
+            // UI elements are already visible, no need to show/hide
 
             // Set initial status
-            page2StatusText.innerText = "CONNECTING...";
+            cooldownStatusText.innerText = "COOLDOWN IN PROGRESS...";
+            cooldownStatusText.style.color = "var(--neon-yellow)";
+            timerText.innerText = "0%";
+
+            // Reset circle and ticks
+            progressCircle.style.strokeDashoffset = circumference;
+            document.querySelectorAll('#page3 .tick').forEach(t => t.classList.remove('active'));
 
             // Start tick sound using Tone.Loop
             if (tickLoop) tickLoop.stop(0); // Clear any old loops
@@ -691,9 +690,8 @@
                 const progress = timestamp - startTime;
                 const percent = Math.min(progress / DURATION, 1);
                 
-                // Countdown 02:18 -> 00:00
-                const remaining = Math.max((DURATION - progress) / 1000, 0);
-                timerText.innerText = formatTime(remaining);
+                // --- UPDATED: Show Percentage ---
+                timerText.innerText = `${Math.floor(percent * 100)}%`;
 
                 // Update Circle
                 const offset = circumference - (percent * circumference);
@@ -701,41 +699,43 @@
 
                 // Update Ticks
                 const tickIndex = Math.floor(percent * totalTicks);
-                const ticks = document.querySelectorAll('#page2 .tick'); // Be specific
+                const ticks = document.querySelectorAll('#page3 .tick'); // Specific to Page 3
                 ticks.forEach((t, i) => {
                     if (i <= tickIndex) t.classList.add('active');
                     else t.classList.remove('active');
                 });
 
                 // Status text updates
-                if (percent > 0.25) page2StatusText.innerText = "CONNECTING TO SERVER...";
-                if (percent > 0.5) page2StatusText.innerText = "VERIFYING HASH...";
-                if (percent > 0.75) page2StatusText.innerText = "DECRYPTING PAYLOAD...";
+                if (percent > 0.25) cooldownStatusText.innerText = "SYNCING WITH SERVER...";
+                if (percent > 0.5) cooldownStatusText.innerText = "CALIBRATING HASH...";
+                if (percent > 0.75) cooldownStatusText.innerText = "FINALIZING...";
 
                 if (progress < DURATION) {
                     animationFrameId = requestAnimationFrame(animate);
                 } else {
-                    finishGeneration(false); // Finished normally
+                    finishCooldown(false); // Finished normally
                 }
             }
             
             // Admin skip: If skipped, just call finishGeneration immediately
             if (skippedByAdmin) {
-                finishGeneration(true);
+                finishCooldown(true);
             } else {
                 animationFrameId = requestAnimationFrame(animate);
             }
         }
 
 
-        function finishGeneration(skipped = false) {
+        // --- RENAMED from finishGeneration ---
+        function finishCooldown(skipped = false) {
             // Stop timer and animations
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
             if (tickLoop) tickLoop.stop(0); // Stop the tick loop
             
             // Reset state flags
-            isTimerRunning = false;
-            isTimerAnimationRunning = false;
+            isCooldownRunning = false;
 
             // Play sound
             if (skipped) {
@@ -748,13 +748,15 @@
                 }
             }
 
-            // --- UPDATED Key Format (Prefix Removed) ---
-            const newKey = generateRandomHex(12); // Removed "GNSYS-" prefix
-            
-            keyOutput.value = newKey; // Set key on Page 3
-            
-            // Show Page 3
-            showPage('page3');
+            // --- Key is already generated ---
+
+            // --- UPDATE UI TO SHOW COMPLETION ---
+            genNewBtn.disabled = false;
+            cooldownStatusText.innerText = "COOLDOWN COMPLETE";
+            cooldownStatusText.style.color = "var(--neon-cyan)";
+            timerText.innerText = "100%";
+            progressCircle.style.strokeDashoffset = 0; // Fill circle
+            document.querySelectorAll('#page3 .tick').forEach(t => t.classList.add('active')); // Fill ticks
         }
 
         function resetGeneratorUI() {
@@ -762,41 +764,38 @@
             let keyCount = parseInt(localStorage.getItem('genesysKeyCount') || '0');
             if (keyCount >= KEY_LIMIT) {
                 genBtn.disabled = true;
-                page1StatusText.innerText = "KEY LIMIT REACHED";
-                page1StatusText.style.color = "var(--neon-pink)";
+                // page1StatusText is gone, this is fine
             } else {
                 genBtn.disabled = false;
-                page1StatusText.innerText = "INITIALIZED";
-                page1StatusText.style.color = "var(--neon-yellow)";
+                // page1StatusText is gone
             }
-            genBtn.querySelector('span').innerText = "GENERATE KEY";
-            urlInput.value = ""; // Clear input
             
-            // Reset Page 2 UI
-            timerVisual.classList.add('hidden');
-            subscribeBtn.classList.remove('hidden');
-            timerStartedMessage.classList.add('hidden');
-            page2StatusText.innerText = "AWAITING ACTION";
-            timerText.innerText = formatTime(DURATION / 1000); // "02:18"
+            // Clear URL input and error
+            if (urlInput) {
+                urlInput.value = '';
+                urlInput.classList.remove('input-error');
+            }
+            if (inputErrorText) {
+                inputErrorText.classList.add('hidden');
+            }
+            
+            // Reset Page 3 UI (for next time it's shown)
+            cooldownStatusText.innerText = "COOLDOWN IN PROGRESS...";
+            timerText.innerText = "0%";
             
             // Reset circle and ticks
             progressCircle.style.strokeDashoffset = circumference;
-            document.querySelectorAll('#page2 .tick').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#page3 .tick').forEach(t => t.classList.remove('active'));
         }
 
         // MADE ASYNC
         async function handleAdminClick() {
             await initAudio(); // Ensure audio is ready
             
-            if (isTimerRunning) {
-                // User is on Page 2
-                if (!isTimerAnimationRunning) {
-                    // Timer is waiting for subscribe click, so we skip it
-                    startTimerAnimation(true); // Call with admin skip
-                } else {
-                    // Timer is already running, so we finish it
-                    finishGeneration(true); // Skip
-                }
+            // --- FIX: Corrected the logic and removed syntax error ---
+            if (isCooldownRunning) {
+                // User is on Page 3 during cooldown
+                finishCooldown(true); // Skip cooldown
             } else {
                 // User is on Page 1
                 if (Tone.context.state === 'running') {
