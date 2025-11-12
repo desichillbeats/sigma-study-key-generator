@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENESYS KEY GENERATOR V6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> <!-- Added Tone.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Cyberpunk Aesthetics */
+        :root {
+            --neon-yellow: #fcee0a;
+            --neon-cyan: #00f0ff;
+            --neon-pink: #ff003c;
+            --dark-bg: #050510;
+            --panel-bg: rgba(10, 10, 20, 0.95);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            /* overflow: hidden; */ /* <-- REMOVED this */
+            margin: 0;
+            perspective: 800px; /* For 3D copy effect */
+        }
+
+        /* Matrix Canvas Background */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .font-tech {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Cyber Panel with Glassmorphism */
+        .cyber-panel {
+            clip-path: polygon(
+                20px 0, 100% 0, 
+                100% calc(100% - 20px), calc(100% - 20px) 100%, 
+                0 100%, 0 20px
+            );
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(252, 238, 10, 0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+        }
+
+        /* Animated Border Gradient */
+        .cyber-border-container {
+            position: relative;
+            padding: 2px;
+            clip-path: polygon(
+                22px 0, 100% 0, 
+                100% calc(100% - 22px), calc(100% - 22px) 100%, 
+                0 100%, 0 22px
+            );
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-yellow), var(--neon-pink));
+            background-size: 200% 200%;
+            animation: border-flow 4s ease infinite;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        @keyframes border-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .input-cyber {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-yellow);
+            color: var(--neon-cyan);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s;
+        }
+        
+        .input-cyber:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--neon-yellow), inset 0 0 10px rgba(252, 238, 10, 0.2);
+            border-color: #fff;
+        }
+
+        .input-error {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .btn-cyber {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-yellow));
+            color: #000;
+            font-weight: 800;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s ease;
+            text-shadow: 0px 0px 2px rgba(255,255,255,0.5);
+        }
+
+        .btn-cyber:hover:not(:disabled) {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-cyber:disabled {
+            filter: grayscale(1);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-subscribe, .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s ease;
+        }
+        .btn-subscribe:hover, .btn-secondary:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        /* Timer Animation styles */
+        .timer-circle-progress {
+            stroke: var(--neon-yellow);
+            stroke-dasharray: 251.2; /* 2 * PI * 40 */
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.1s linear;
+            filter: drop-shadow(0 0 5px var(--neon-yellow));
+        }
+
+        /* Glitch text effect */
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 blue;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(15px, 9999px, 11px, 0); }
+            20% { clip: rect(88px, 9999px, 95px, 0); }
+            40% { clip: rect(10px, 9999px, 82px, 0); }
+            60% { clip: rect(34px, 9999px, 5px, 0); }
+            80% { clip: rect(66px, 9999px, 29px, 0); }
+            100% { clip: rect(53px, 9999px, 92px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(12px, 9999px, 4px, 0); }
+            40% { clip: rect(44px, 9999px, 13px, 0); }
+            60% { clip: rect(89px, 9999px, 71px, 0); }
+            80% { clip: rect(22px, 9999px, 38px, 0); }
+            100% { clip: rect(4px, 9999px, 84px, 0); }
+        }
+
+        /* Ticks */
+        .tick-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .tick {
+            position: absolute;
+            width: 2px; height: 10px;
+            background: var(--neon-yellow);
+            left: 50%; top: 0;
+            transform-origin: 50% 90px;
+            opacity: 0.2;
+            transition: opacity 0.1s, box-shadow 0.1s;
+        }
+        .tick.active {
+            opacity: 1;
+            box-shadow: 0 0 8px var(--neon-yellow);
+            background: #fff;
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+        .modal-content {
+            z-index: 101;
+        }
+        .modal-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .modal-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--neon-yellow);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Copy Animation */
+        #copyAnimationContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            pointer-events: none;
+            /* overflow: hidden; */ /* <-- REMOVED this */
+        }
+        .copy-fly-off {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px #fff;
+            animation: fly-off 1s ease-out forwards;
+        }
+
+        /* UPDATED KEYFRAME with CSS Vars */
+        @keyframes fly-off {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1) rotate3d(0,0,0, 0deg);
+                opacity: 1;
+                text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px #fff;
+            }
+            100% {
+                transform: translate3d(var(--tx, 0), var(--ty, -50px), var(--tz, 500px))
+                           scale(var(--scale, 2.5))
+                           rotate3d(var(--rx, 0.5), var(--ry, 0.5), var(--rz, 0), var(--rotate, 15deg));
+                opacity: 0;
+                /* Enhanced glow */
+                text-shadow: 0 0 20px var(--neon-yellow), 0 0 40px var(--neon-yellow), 0 0 80px var(--neon-pink);
+            }
+        }
+
+    </style>
+</head>
+<body class="h-screen w-full flex items-center justify-center p-4">
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Invisible Admin Button -->
+    <div id="adminBtn" onclick="handleAdminClick()" class="absolute top-0 left-0 w-24 h-24 z-50 cursor-pointer" title="Admin"></div>
+    <!-- Invisible Reset Button -->
+    <div id="resetBtn" onclick="resetLimit()" class="absolute top-0 right-0 w-24 h-24 z-50 cursor-pointer" title="Reset Limit"></div>
+
+    <!-- PAGE 1: GENERATOR -->
+    <div id="page1" class="cyber-border-container w-full max-w-md z-10">
+        <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
+            
+            <!-- Info Button (REMOVED) -->
+
+            <!-- Header -->
+            <div class="text-center mb-6 mt-2">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50"></div>
+                        <svg class="w-8 h-8 text-[var(--neon-yellow)] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h1 class="font-tech text-3xl font-bold tracking-wider text-[var(--neon-yellow)] glitch" data-text="GENESYS">GENESYS</h1>
+                </div>
+                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">Key Generator v6.0</p>
+            </div>
+
+            <!-- Input Section -->
+            <div class="w-full relative mb-6 group">
+                <label class="text-[10px] text-[var(--neon-cyan)] mb-1 block font-tech tracking-widest ml-2">TARGET URL</label>
+                <input type="text" id="urlInput" placeholder="https://..." class="input-cyber w-full bg-transparent p-3 pr-10 text-sm placeholder-gray-500 tracking-wide font-mono transition-all">
+                <div class="absolute right-3 top-8 pointer-events-none">
+                     <div class="w-2 h-2 bg-[var(--neon-yellow)] rounded-full animate-pulse shadow-[0_0_5px_var(--neon-yellow)]"></div>
+                </div>
+            </div>
+
+            <!-- Instructions List (Replaces Spacer) -->
+            <div class="w-full relative mb-6 group text-left p-4 bg-black/30 border border-dashed border-[var(--neon-cyan)]/20" style="clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+                <h3 class="font-tech text-lg text-[var(--neon-yellow)] tracking-wider mb-2">HOW TO USE:</h3>
+                <ul class="modal-list text-gray-300 w-full list-none pl-0">
+                    <li>Paste your Target URL into the input field.</li>
+                    <li>Click 'Generate Key' to go to the wait page.</li>
+                    <li>Click 'Subscribe' on the wait page to start the timer.</li>
+                    <li>Wait 2.3 minutes for the process to complete.</li>
+                    <li class="text-[var(--neon-pink)]">**KEY LIMIT:** You can generate **2 keys** per session. Click the **top-right corner** to reset this limit.</li>
+                </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="w-full flex flex-col gap-3 mt-6">
+                <!-- NEW 'Get URL' BUTTON -->
+                <a href="https://t.me/sigma_keygen_bot?start=direct" target="_blank" class="btn-secondary w-full py-2 text-center text-sm uppercase tracking-widest font-bold relative overflow-hidden font-tech flex items-center justify-center gap-2">
+                    <span>1. Get Your URL</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+                
+                <button onclick="startGeneration()" id="genBtn" class="btn-cyber w-full py-3 text-lg uppercase tracking-widest relative overflow-hidden font-tech">
+                    <!-- Updated text to reflect the new first step -->
+                    <span class="relative z-10">2. Generate Key</span>
+                </button>
+            </div>
+            
+            <!-- Status Text for Page 1 -->
+            <div class="absolute bottom-10">
+                <span class="text-[9px] text-[var(--neon-yellow)] tracking-[0.2em] opacity-100 transition-opacity duration-300" id="page1StatusText">INITIALIZED</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PAGE 2: WAIT/SUPPORT (Initially Hidden) -->
+    <div id="page2" class="cyber-border-container w-full max-w-md z-10 hidden">
+        <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
+            <!-- Header -->
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <svg class="w-6 h-6 text-[var(--neon-pink)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <!-- ADDED glitch class and data-text attribute -->
+                <h1 class="font-tech text-2xl font-bold tracking-wider text-[var(--neon-pink)] glitch" data-text="SUPPORT THE CREATOR">SUPPORT THE CREATOR</h1>
+            </div>
+            <!-- Content -->
+            <p class="text-gray-300 text-center mb-4">Please support the creator to start the timer.</p>
+            <p class="text-gray-300 text-center mb-6">Your key will be generated after the countdown.</p>
+
+            <!-- MOVED TIMER VISUAL HERE (Initially Hidden) -->
+            <div id="timerVisual" class="relative w-48 h-48 mb-6 flex items-center justify-center hidden">
+                <!-- Ticks Ring -->
+                <div class="tick-ring" id="tickRing"></div>
+                <!-- Progress Circle SVG -->
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none" stroke-dasharray="4 4"></circle>
+                    <circle id="progressCircle" class="timer-circle-progress" cx="50" cy="50" r="40" stroke-width="4" fill="none" stroke-linecap="round"></circle>
+                </svg>
+                <!-- Digital Timer Text -->
+                <div class="absolute font-tech flex flex-col items-center justify-center">
+                     <span class="text-4xl font-bold text-[var(--neon-cyan)] drop-shadow-[0_0_5px_var(--neon-cyan)] tracking-widest" id="timerText">02:18</span>
+                     <span class="text-[9px] text-[var(--neon-yellow)] tracking-[0.2em] opacity-100 transition-opacity duration-300" id="page2StatusText">AWAITING ACTION</span>
+                </div>
+            </div>
+            <!-- END MOVED TIMER -->
+
+            <!-- Subscribe Button (acts as timer start) -->
+            <a id="subscribeBtn" href="https://youtube.com/@desichill_beats?si=gWWPeqAfmzRpzGum" target="_blank" onclick="startTimerAnimation()" class="btn-subscribe w-full py-3 text-center text-sm uppercase tracking-widest font-bold relative overflow-hidden font-tech flex items-center justify-center gap-2 mb-3">
+                <span>SUBSCRIBE TO START TIMER</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </a>
+            
+            <!-- Message shown after clicking subscribe -->
+            <p id="timerStartedMessage" class="text-gray-400 text-center text-sm font-tech hidden">Timer started. You can close the new tab.</p>
+
+        </div>
+    </div>
+
+
+    <!-- PAGE 3: RESULTS (Initially Hidden) -->
+    <div id="page3" class="cyber-border-container w-full max-w-md z-10 hidden">
+        <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
+            
+            <!-- Header -->
+            <div class="text-center mb-6 mt-2">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-[var(--neon-yellow)] blur-md opacity-50"></div>
+                        <svg class="w-8 h-8 text-[var(--neon-yellow)] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h1 class="font-tech text-3xl font-bold tracking-wider text-[var(--neon-yellow)] glitch" data-text="GENESYS">GENESYS</h1>
+                </div>
+                <p class="text-[var(--neon-cyan)] tracking-[0.3em] text-[10px] font-bold uppercase opacity-80">GENERATION COMPLETE</p>
+            </div>
+
+            <!-- Output Section -->
+            <div class="w-full mb-4 relative mt-6">
+                <label class="text-[10px] text-gray-400 ml-2 mb-1 block font-tech tracking-widest uppercase">Generated Key</label>
+                <div class="relative flex items-stretch gap-2">
+                    <input type="text" id="keyOutput" readonly class="input-cyber flex-1 bg-black/60 p-3 text-center text-lg text-[var(--neon-yellow)] tracking-widest font-mono border-opacity-50" value="">
+                    
+                    <!-- Copy Button inline -->
+                    <button onclick="copyToClipboard(this)" class="w-12 bg-black/40 border border-[var(--neon-yellow)] text-[var(--neon-yellow)] hover:bg-[var(--neon-yellow)] hover:text-black transition-all clip-path-polygon flex items-center justify-center group relative" style="clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <!-- Tooltip -->
+                        <div id="copyTooltip" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-[var(--neon-yellow)] text-black text-[10px] font-bold px-2 py-1 opacity-0 transition-opacity pointer-events-none">COPIED</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="w-full flex flex-col gap-3 mt-8">
+                <!-- Go Back Button -->
+                <button onclick="showPage('page1')" class="btn-cyber w-full py-3 text-lg uppercase tracking-widest relative overflow-hidden font-tech">
+                    <span class="relative z-10">Generate New</span>
+                </button>
+                
+                <!-- NEW TEXT BLOCK (Replaced Subscribe Button) -->
+                <div class="font-tech text-xs text-center text-gray-400 space-y-1 mt-2 border-t border-[var(--neon-cyan)]/10 pt-4">
+                    <p class="text-[var(--neon-yellow)]">Click on 'copy button' to copy this key and use it in the app.</p>
+                    <p>Keep it safe. Do not share with anyone.</p>
+                    <p class="text-[var(--neon-pink)]">Please use this key within 10 minutes! After that, it will expire and won't work anymore.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- INSTRUCTIONS MODAL (Hidden) -->
+    <div id="instructionsModal" class="modal-backdrop hidden fixed inset-0 flex items-center justify-center p-4" onclick="hideModal('instructionsModal')">
+        <div class="modal-content cyber-border-container w-full max-w-md z-10" onclick="event.stopPropagation()">
+            <div class="cyber-panel p-6 flex flex-col items-center w-full h-full relative">
+                <!-- Header -->
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-[var(--neon-yellow)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h1 class="font-tech text-2xl font-bold tracking-wider text-[var(--neon-yellow)]">HOW TO USE</h1>
+                </div>
+                <!-- Content -->
+                <ul class="modal-list text-gray-300 w-full mb-6">
+                    <li>Paste your Target URL into the input field.</li>
+                    <li>Click 'Generate Key' to go to the wait page.</li>
+                    <li>Click 'Subscribe' on the wait page to start the timer.</li>
+                    <li>Wait 2.3 minutes for the process to complete.</li>
+                    <li>**KEY LIMIT:** You can generate **2 keys** per session. Click the **top-right corner** to reset this limit for testing.</li>
+                </ul>
+                <button onclick="hideModal('instructionsModal')" class="btn-secondary w-full py-2 text-sm uppercase tracking-widest font-bold">CLOSE</button>
+            </div>
+        </div>
+    <!-- INSTRUCTIONS MODAL (REMOVED) -->
+    
+    <!-- SUPPORT MODAL (REMOVED) -->
+
+    <!-- 3D Copy Animation Container -->
+    <div id="copyAnimationContainer"></div>
+
+    <script>
+        // --- MATRIX RAIN EFFECT ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const chars = '0123456789ABCDEF';
+        const drops = [];
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        for (let i = 0; i < columns; i++) drops[i] = 1;
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.05)'; // Fade effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0'; // Green text
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                
+                // Vary colors for cyberpunk feel
+                if(Math.random() > 0.95) ctx.fillStyle = '#fcee0a'; // Yellow highlight
+                else if(Math.random() > 0.95) ctx.fillStyle = '#00f0ff'; // Cyan highlight
+                else ctx.fillStyle = '#003300'; // Dark green standard
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+
+        // --- KEY GEN LOGIC ---
+
+        // --- Sound Setup ---
+        let processingSynth, successSynth, bypassSynth; // Renamed tickSynth
+        let tickLoop = null; // Tone.Loop for persistent ticking
+        const KEY_LIMIT = 2;
+
+        // Initialize synths on first user interaction (inside startGeneration/handleAdminClick)
+        // MADE ASYNC
+        async function initAudio() {
+            if (Tone.context.state !== 'running') {
+                await Tone.start(); // AWAIT Tone.start()
+            }
+            if (!processingSynth) { // Renamed tickSynth and changed to FMSynth
+                processingSynth = new Tone.FMSynth({
+                    harmonicity: 8,
+                    modulationIndex: 2,
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.001, decay: 0.2, sustain: 0.0, release: 0.1 },
+                }).toDestination();
+            }
+            if (!successSynth) {
+                successSynth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+            }
+            if (!bypassSynth) {
+                bypassSynth = new Tone.AMSynth({
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
+                }).toDestination();
+            }
+        }
+
+        // --- Page/State Management ---
+        let isTimerRunning = false; // Is the whole *process* running
+        let isTimerAnimationRunning = false; // Is the *animation* (countdown) running
+        let animationFrameId = null;
+
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+
+        function showPage(pageId) {
+            page1.classList.add('hidden');
+            page2.classList.add('hidden');
+            page3.classList.add('hidden');
+            
+            const pageToShow = document.getElementById(pageId);
+            if (pageToShow) {
+                pageToShow.classList.remove('hidden');
+            }
+
+            if (pageId === 'page1') {
+                resetGeneratorUI(); // Reset UI when going to page 1
+            }
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // --- UI Elements ---
+        const tickRing = document.getElementById('tickRing');
+        const totalTicks = 40;
+        for (let i = 0; i < totalTicks; i++) {
+            const tick = document.createElement('div');
+            tick.classList.add('tick');
+            tick.style.transform = `rotate(${i * (360 / totalTicks)}deg)`;
+            tickRing.appendChild(tick);
+        }
+
+        const DURATION = 138000; // 138 seconds = 2.3 minutes
+        
+        // Page 1 UI
+        const genBtn = document.getElementById('genBtn');
+        const urlInput = document.getElementById('urlInput');
+        const page1StatusText = document.getElementById('page1StatusText');
+
+        // Page 2 UI
+        const timerVisual = document.getElementById('timerVisual');
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const timerStartedMessage = document.getElementById('timerStartedMessage');
+        const timerText = document.getElementById('timerText');
+        const page2StatusText = document.getElementById('page2StatusText');
+        const progressCircle = document.getElementById('progressCircle');
+
+        // Page 3 UI
+        const keyOutput = document.getElementById('keyOutput');
+        const copyTooltip = document.getElementById('copyTooltip');
+
+
+        // Circumference = 2 * PI * 40 = 251.2
+        const circumference = 2 * Math.PI * 40;
+        progressCircle.style.strokeDasharray = circumference;
+        progressCircle.style.strokeDashoffset = circumference;
+
+        function formatTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function generateRandomHex(length) {
+            const h = '0123456789ABCDEF';
+            let res = '';
+            for(let i=0; i<length; i++) res += h[Math.floor(Math.random()*16)];
+            return res;
+        }
+
+        // MADE ASYNC
+        async function startGeneration() {
+            await initAudio(); // Ensure audio is ready
+            const val = urlInput.value.trim();
+            
+            // Check key generation limit
+            let keyCount = parseInt(localStorage.getItem('genesysKeyCount') || '0');
+            if (keyCount >= KEY_LIMIT) {
+                page1StatusText.innerText = "KEY LIMIT REACHED";
+                page1StatusText.style.color = "var(--neon-pink)";
+                genBtn.disabled = true;
+                return;
+            }
+
+            // Simple validation
+            if (!val) {
+                urlInput.classList.add('input-error');
+                setTimeout(() => urlInput.classList.remove('input-error'), 500);
+                return;
+            }
+
+            // Increment key count
+            keyCount++;
+            localStorage.setItem('genesysKeyCount', keyCount);
+
+            // Set global running state
+            isTimerRunning = true;
+
+            // Go to Page 2
+            showPage('page2');
+            
+            // Set initial state for Page 2
+            page2StatusText.innerText = "AWAITING ACTION";
+            page2StatusText.style.color = "var(--neon-yellow)";
+            timerText.innerText = formatTime(DURATION / 1000);
+        }
+
+        function startTimerAnimation(skippedByAdmin = false) {
+            if (isTimerAnimationRunning) return; // Don't start twice
+            
+            isTimerAnimationRunning = true;
+
+            // Show timer, hide subscribe button
+            timerVisual.classList.remove('hidden');
+            subscribeBtn.classList.add('hidden');
+            timerStartedMessage.classList.remove('hidden');
+
+            // Set initial status
+            page2StatusText.innerText = "CONNECTING...";
+
+            // Start tick sound using Tone.Loop
+            if (tickLoop) tickLoop.stop(0); // Clear any old loops
+            tickLoop = new Tone.Loop(time => {
+                if (Tone.context.state === 'running') {
+                    // Changed to processingSynth with new notes and timing
+                    processingSynth.triggerAttackRelease("A3", "16n", time);
+                    processingSynth.triggerAttackRelease("E4", "16n", time + (Math.random() * 0.5 + 0.25)); // Random arpeggio
+                }
+            }, "0.5s").start(Tone.now()); // Loop every 0.5s
+
+            let startTime = null;
+ 
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                const percent = Math.min(progress / DURATION, 1);
+                
+                // Countdown 02:18 -> 00:00
+                const remaining = Math.max((DURATION - progress) / 1000, 0);
+                timerText.innerText = formatTime(remaining);
+
+                // Update Circle
+                const offset = circumference - (percent * circumference);
+                progressCircle.style.strokeDashoffset = offset;
+
+                // Update Ticks
+                const tickIndex = Math.floor(percent * totalTicks);
+                const ticks = document.querySelectorAll('#page2 .tick'); // Be specific
+                ticks.forEach((t, i) => {
+                    if (i <= tickIndex) t.classList.add('active');
+                    else t.classList.remove('active');
+                });
+
+                // Status text updates
+                if (percent > 0.25) page2StatusText.innerText = "CONNECTING TO SERVER...";
+                if (percent > 0.5) page2StatusText.innerText = "VERIFYING HASH...";
+                if (percent > 0.75) page2StatusText.innerText = "DECRYPTING PAYLOAD...";
+
+                if (progress < DURATION) {
+                    animationFrameId = requestAnimationFrame(animate);
+                } else {
+                    finishGeneration(false); // Finished normally
+                }
+            }
+            
+            // Admin skip: If skipped, just call finishGeneration immediately
+            if (skippedByAdmin) {
+                finishGeneration(true);
+            } else {
+                animationFrameId = requestAnimationFrame(animate);
+            }
+        }
+
+
+        function finishGeneration(skipped = false) {
+            // Stop timer and animations
+            cancelAnimationFrame(animationFrameId);
+            if (tickLoop) tickLoop.stop(0); // Stop the tick loop
+            
+            // Reset state flags
+            isTimerRunning = false;
+            isTimerAnimationRunning = false;
+
+            // Play sound
+            if (skipped) {
+                if (Tone.context.state === 'running') {
+                    bypassSynth.triggerAttackRelease("C5", "8n", Tone.now());
+                }
+            } else {
+                if (Tone.context.state === 'running') {
+                    successSynth.triggerAttackRelease("C5", "0.5s", Tone.now());
+                }
+            }
+
+            // --- UPDATED Key Format (Prefix Removed) ---
+            const newKey = generateRandomHex(12); // Removed "GNSYS-" prefix
+            
+            keyOutput.value = newKey; // Set key on Page 3
+            
+            // Show Page 3
+            showPage('page3');
+        }
+
+        function resetGeneratorUI() {
+            // Resets Page 1 to its initial state
+            let keyCount = parseInt(localStorage.getItem('genesysKeyCount') || '0');
+            if (keyCount >= KEY_LIMIT) {
+                genBtn.disabled = true;
+                page1StatusText.innerText = "KEY LIMIT REACHED";
+                page1StatusText.style.color = "var(--neon-pink)";
+            } else {
+                genBtn.disabled = false;
+                page1StatusText.innerText = "INITIALIZED";
+                page1StatusText.style.color = "var(--neon-yellow)";
+            }
+            genBtn.querySelector('span').innerText = "GENERATE KEY";
+            urlInput.value = ""; // Clear input
+            
+            // Reset Page 2 UI
+            timerVisual.classList.add('hidden');
+            subscribeBtn.classList.remove('hidden');
+            timerStartedMessage.classList.add('hidden');
+            page2StatusText.innerText = "AWAITING ACTION";
+            timerText.innerText = formatTime(DURATION / 1000); // "02:18"
+            
+            // Reset circle and ticks
+            progressCircle.style.strokeDashoffset = circumference;
+            document.querySelectorAll('#page2 .tick').forEach(t => t.classList.remove('active'));
+        }
+
+        // MADE ASYNC
+        async function handleAdminClick() {
+            await initAudio(); // Ensure audio is ready
+            
+            if (isTimerRunning) {
+                // User is on Page 2
+                if (!isTimerAnimationRunning) {
+                    // Timer is waiting for subscribe click, so we skip it
+                    startTimerAnimation(true); // Call with admin skip
+                } else {
+                    // Timer is already running, so we finish it
+                    finishGeneration(true); // Skip
+                }
+            } else {
+                // User is on Page 1
+                if (Tone.context.state === 'running') {
+                    bypassSynth.triggerAttackRelease("C4", "8n", Tone.now());
+                }
+            }
+        }
+
+        function resetLimit() {
+            localStorage.removeItem('genesysKeyCount');
+            resetGeneratorUI();
+            // Simple feedback that it worked
+            const resetBtn = document.getElementById('resetBtn');
+            resetBtn.style.background = 'rgba(255, 0, 60, 0.5)';
+            setTimeout(() => resetBtn.style.background = 'transparent', 200);
+        }
+
+        // --- REVERTED to document.execCommand for wider compatibility ---
+        function copyToClipboard(buttonElement) {
+            const copyText = document.getElementById("keyOutput");
+            const textToCopy = copyText.value;
+            if (!textToCopy) return;
+
+            // --- 3D Fly-off Animation ---
+            const text = textToCopy;
+            const rect = copyText.getBoundingClientRect();
+            const animContainer = document.getElementById('copyAnimationContainer');
+
+            const flyOffText = document.createElement('div');
+            flyOffText.className = 'copy-fly-off';
+            flyOffText.innerText = text;
+            // Position it exactly over the input text
+            flyOffText.style.left = `${rect.left + window.scrollX}px`;
+            flyOffText.style.top = `${rect.top + window.scrollY}px`;
+            flyOffText.style.width = `${rect.width}px`;
+            flyOffText.style.textAlign = 'center';
+
+            // --- NEW RANDOM 3D ANIMATION VARS ---
+            const randX = (Math.random() - 0.5) * 600; // -300px to +300px
+            const randY = (Math.random() - 0.5) * 400 - 100; // -300px to +100px
+            const randZ = Math.random() * 400 + 400; // 400px to 800px
+            const randScale = Math.random() * 1.5 + 2.0; // 2.0 to 3.5
+            const randRot = (Math.random() - 0.5) * 90; // -45deg to +45deg
+            const randRx = Math.random() - 0.5;
+            const randRy = Math.random() - 0.5;
+            const randRz = Math.random() - 0.5;
+
+            flyOffText.style.setProperty('--tx', `${randX}px`);
+            flyOffText.style.setProperty('--ty', `${randY}px`);
+            flyOffText.style.setProperty('--tz', `${randZ}px`);
+            flyOffText.style.setProperty('--scale', randScale);
+            flyOffText.style.setProperty('--rotate', `${randRot}deg`);
+            flyOffText.style.setProperty('--rx', randRx);
+            flyOffText.style.setProperty('--ry', randRy);
+            flyOffText.style.setProperty('--rz', randRz);
+            // --- END NEW ---
+
+            animContainer.appendChild(flyOffText);
+            // Remove after animation ends
+            setTimeout(() => animContainer.removeChild(flyOffText), 1000);
+
+            // --- REVERTED Copy Logic ---
+            const tooltip = document.getElementById('copyTooltip');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    tooltip.innerText = "COPIED";
+                    tooltip.style.opacity = '1';
+                    setTimeout(() => tooltip.style.opacity = '0', 1500);
+                } else {
+                    tooltip.innerText = "FAILED";
+                    tooltip.style.opacity = '1';
+                    setTimeout(() => {
+                        tooltip.style.opacity = '0';
+                        tooltip.innerText = "COPIED"; // Reset text
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Oops, unable to copy.', err);
+                tooltip.innerText = "FAILED";
+                tooltip.style.opacity = '1';
+                setTimeout(() => {
+                    tooltip.style.opacity = '0';
+                    tooltip.innerText = "COPIED"; // Reset text
+                }, 2000);
+            }
+
+            // Deselect text after copy attempt
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                document.selection.empty();
+            }
+        }
+
+        // Set initial timer text and check limit on load
+        window.onload = () => {
+            resetGeneratorUI(); // This handles both timer text and limit check
+            showPage('page1'); // Ensure we start on page 1
+        };
+    </script>
+</body>
+</html>
