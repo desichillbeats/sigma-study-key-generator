@@ -642,18 +642,45 @@
             if (isCooldownRunning) return; // Prevent multiple clicks
 
             // --- UPDATED Key Format (Prefix Removed) ---
-            const newKey = generateRandomHex(12); // Removed "GNSYS-" prefix
-            keyOutput.value = newKey; // Set key on Page 3
-            
-            // Show Page 3
-            showPage('page3');
-
-            // Disable "Generate New" button
-            genNewBtn.disabled = true;
-            
-            // Start the cooldown timer
-            startCooldownTimer(false);
-        }
+// Show Page 3 first to display loading state
+  showPage('page3');
+  
+  // Set loading state
+  keyOutput.value = 'Generating...';
+  genNewBtn.disabled = true;
+  
+  // Get the URL from input
+  const url = urlInput.value.trim();
+  
+  // Call the API to generate the key
+  fetch('/api/generate-key', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url: url }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success && data.key) {
+      // Set the generated key
+      const newKey = data.key;
+      keyOutput.value = newKey; // Set key on Page 3
+              
+      // Start the cooldown timer
+      startCooldownTimer(false);
+    } else {
+      // Handle error from API
+      keyOutput.value = 'Error: ' + (data.error || 'Failed to generate key');
+      genNewBtn.disabled = false;
+    }
+  })
+  .catch(error => {
+    console.error('Error calling API:', error);
+    keyOutput.value = 'Error: Could not connect to server';
+    genNewBtn.disabled = false;
+  });
+            }
 
 
         // --- RENAMED from startTimerAnimation ---
